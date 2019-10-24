@@ -1,25 +1,27 @@
 'use strict';
 
-const Rect = class {
-  constructor(x, y, width, height) {
+const Figure = class {
+  constructor(x, y, ...sides) {
     this.x = x;
     this.y = y;
-    this.width = width;
-    this.height = height;
+    this.sides = sides;
   }
 
   toString() {
-    return `[${this.x}, ${this.y}, ${this.width}, ${this.height}]`;
+    let currentSides = [this.x, this.y];
+    return currentSides.concat(this.sides).join();
   }
 };
 
 const equilateral = Category => class extends Category {
-  constructor(x, y, side) {
-    super(x, y, side, side);
+  constructor(x, y, ...side) {
+    super(x, y, ...side);
+
   }
 };
 
-const Square = equilateral(Rect);
+const Square = equilateral(Figure);
 
-const p1 = new Square(10, 20, 50);
+
+const p1 = new Square(10, 20, 50, 21, 23, 211);
 console.log(p1.toString());
