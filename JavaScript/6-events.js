@@ -1,16 +1,38 @@
 'use strict';
 
-const emitable = (obj, events = {}) => Object.assign(obj, {
-  on(name, fn) {
+// const emitable = (obj, events = {}) => Object.assign(obj, {
+//   on(name, fn) {
+//     const event = events[name] || [];
+//     events[name] = event;
+//     event.push(fn);
+//   },
+//   emit(name, ...data) {
+//     const event = events[name];
+//     if (event) event.forEach(fn => fn(...data));
+//   }
+// });
+
+const emitable = (obj, events = {}) => {
+  Object.defineProperty(obj, 'on', {
+  value: (name, fn) => {
     const event = events[name] || [];
     events[name] = event;
     event.push(fn);
   },
-  emit(name, ...data) {
-    const event = events[name];
-    if (event) event.forEach(fn => fn(...data));
-  }
+  enumerable: true,
 });
+
+Object.defineProperty(obj, 'emit', {
+  value: (name, ...data)  => {
+        const event = events[name];
+        if (event) event.forEach(fn => fn(...data));
+      },
+  enumerable: true,
+});
+
+return obj;
+}
+
 
 const movable = obj => {
   obj.on('move', (x, y) => {
